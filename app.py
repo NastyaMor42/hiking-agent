@@ -3,7 +3,7 @@ from agent import run_agent
 
 st.set_page_config(layout="centered")
 
-# RTL עדין (בלי לשבור קומפוננטים)
+# RTL עדין בלבד
 st.markdown("""
 <style>
 html, body {
@@ -20,7 +20,7 @@ html, body {
 # כותרת
 st.title("חיפוש טיולים בישראל 🥾")
 
-# 🔍 שורת חיפוש נקייה (בלי CSS שבור)
+# שורת חיפוש
 col1, col2 = st.columns([4,1])
 
 with col1:
@@ -39,6 +39,9 @@ if search_clicked and query:
 
     st.divider()
     st.subheader("מסלולים מומלצים ✨")
+
+    if not results:
+        st.warning("לא נמצאו תוצאות 😅")
 
     for r in results:
         st.markdown("### " + r["title"] + " 🥾")
