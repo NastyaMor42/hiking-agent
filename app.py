@@ -1,65 +1,84 @@
 import streamlit as st
 from search import search_hikes
 
-# חשוב: זה חייב להיות ראשון
 st.set_page_config(layout="centered")
 
-# 🔥 RTL FIX חזק (כולל override מלא)
+# 🎨 RTL + עיצוב מודרני
 st.markdown("""
 <style>
-/* כל האפליקציה */
 html, body, [data-testid="stAppViewContainer"] {
     direction: rtl;
     text-align: right;
+    background-color: #0e1117;
 }
 
-/* כל האלמנטים */
-* {
-    direction: rtl !important;
+/* כותרת */
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* שדה חיפוש */
+.stTextInput input {
     text-align: right !important;
+    border-radius: 10px;
+    padding: 10px;
 }
 
-/* input */
-input, textarea {
-    text-align: right !important;
-}
-
-/* label */
-label {
+/* כפתור */
+.stButton button {
     width: 100%;
-    text-align: right !important;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
 }
 
-/* selectbox */
-div[data-baseweb="select"] {
-    direction: rtl !important;
+/* כרטיסים */
+.card {
+    background-color: #1c1f26;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    transition: 0.2s;
 }
 
-/* כפתורים */
-button {
-    float: right;
+.card:hover {
+    transform: scale(1.01);
 }
 
-/* בלוק מרכזי */
-.block-container {
-    direction: rtl;
-    text-align: right;
+/* קו הפרדה */
+.divider {
+    height: 1px;
+    background: #2c2f36;
+    margin: 25px 0;
 }
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🥾 חיפוש טיולים בישראל")
+# 🏷️ כותרת
+st.markdown("<h1>חיפוש טיולים בישראל 🥾</h1>", unsafe_allow_html=True)
 
-query = st.text_input("מה לחפש?", "טיול קל בצפון ישראל")
+# 🔍 שדה חיפוש
+query = st.text_input("מה בא לך למצוא? 🔎", "טיול קל בצפון ישראל")
 
-if st.button("🔍 חפש"):
+# 🔘 כפתור
+if st.button("חפש מסלולים 🔍"):
     results = search_hikes(query)
 
-    if not results:
-        st.error("לא נמצאו תוצאות 😅")
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-    for r in results:
-        st.markdown("---")
-        st.subheader(r["title"])
-        st.write(r["snippet"])
-        st.markdown(f"[🔗 מעבר למסלול]({r['link']})")
+    if not results:
+        st.warning("לא נמצאו תוצאות 😅")
+    else:
+        st.subheader("מסלולים מומלצים ✨")
+
+        for r in results:
+            st.markdown('<div class="card">', unsafe_allow_html=True)
+
+            st.markdown(f"### {r['title']} 🥾")
+            st.write(r["snippet"])
+
+            st.markdown(f"[מעבר למסלול 🔗]({r['link']})")
+
+            st.markdown('</div>', unsafe_allow_html=True)
