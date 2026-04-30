@@ -1,99 +1,48 @@
 import streamlit as st
-from search import search_hikes
+from agent import run_agent
 
 st.set_page_config(layout="centered")
 
-# 🎨 RTL + עיצוב
+# RTL עדין (בלי לשבור קומפוננטים)
 st.markdown("""
 <style>
-
-/* RTL חזק */
-html, body, [data-testid="stAppViewContainer"], .block-container {
-    direction: rtl !important;
-    text-align: right !important;
+html, body {
+    direction: rtl;
 }
 
-/* כותרת */
-h1 {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-/* שדה חיפוש גדול */
-.stTextInput input {
-    text-align: right !important;
-    font-size: 18px !important;
-    padding: 16px !important;
-    height: 60px !important;
-    border-radius: 12px !important;
-}
-
-/* placeholder (טקסט עזרה בתוך השדה) */
-.stTextInput input::placeholder {
-    color: #aaa !important;
-    font-style: italic !important;
-    opacity: 1 !important;
-}
-
-/* כפתור */
-.stButton button {
-    width: 100%;
-    border-radius: 12px;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-/* כרטיסים */
-.card {
-    background-color: #1c1f26;
-    padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 25px;
+.block-container {
+    direction: rtl;
     text-align: right;
 }
-
-/* divider */
-.divider {
-    height: 1px;
-    background: #2c2f36;
-    margin: 25px 0;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
-# 🏷️ כותרת
-st.markdown("<h1>חיפוש טיולים בישראל 🥾</h1>", unsafe_allow_html=True)
+# כותרת
+st.title("חיפוש טיולים בישראל 🥾")
 
-# 🔍 שדה חיפוש עם placeholder אמיתי
-col1, col2 = st.columns([5,1])
+# 🔍 שורת חיפוש נקייה (בלי CSS שבור)
+col1, col2 = st.columns([4,1])
 
 with col1:
     query = st.text_input(
-        label="",
-        placeholder="לדוגמה: טיול קל בצפון עם מים 🌿",
+        "",
+        placeholder="לדוגמה: טיול קל בצפון עם מים 🌿"
     )
 
 with col2:
     search_clicked = st.button("חפש 🔍")
 
-if search_clicked:
-    results = search_hikes(query)
+# תוצאות
+if search_clicked and query:
 
-    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+    results = run_agent(query)
 
-    if not results:
-        st.warning("לא נמצאו תוצאות 😅")
-    else:
-        st.subheader("מסלולים מומלצים ✨")
+    st.divider()
+    st.subheader("מסלולים מומלצים ✨")
 
-        for r in results:
-            st.markdown('<div class="card">', unsafe_allow_html=True)
-
-            st.markdown(f"### {r['title']} 🥾")
-            st.write(r["snippet"])
-
-            st.markdown(f"[מעבר למסלול 🔗]({r['link']})")
-
-            st.markdown('</div>', unsafe_allow_html=True)
+    for r in results:
+        st.markdown("### " + r["title"] + " 🥾")
+        st.write(r["summary"])
+        st.write("💡 " + r["why"])
+        st.markdown(f"[מעבר למסלול 🔗]({r['link']})")
+        st.divider()
