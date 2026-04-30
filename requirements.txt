@@ -2,3 +2,4 @@ streamlit
 openai
 requests
 twilio
+google-search-results
