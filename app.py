@@ -26,7 +26,7 @@ st.markdown("""
 
     height: 80px !important;
     padding: 18px !important;
-    font-size: 18px !important;
+    font-size: 28px !important;
 
     border-radius: 14px !important;
     border: 1px solid #333 !important;
