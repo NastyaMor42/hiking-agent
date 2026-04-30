@@ -3,50 +3,47 @@ from agent import run_agent
 
 st.set_page_config(layout="centered")
 
-# 🎯 RTL יציב + שדה חיפוש "ריבועי"
+# RTL יציב (עדין אבל עובד)
 st.markdown("""
 <style>
-
 .block-container {
     direction: rtl;
     text-align: right;
 }
 
-/* קונטיינר */
-.stTextInput {
-    max-width: 700px;
-    margin: auto;
+/* גם התוצאות */
+.stMarkdown, .stText {
+    direction: rtl !important;
+    text-align: right !important;
 }
 
-/* השדה עצמו - מתוקן */
+/* שדה חיפוש */
 .stTextInput input {
     direction: rtl !important;
     text-align: right !important;
-
-    height: 60px !important;              /* הורדנו קצת */
-    padding: 0 16px !important;           /* רק צדדים */
     font-size: 18px !important;
-    line-height: 60px !important;         /* 👈 זה מה שמתקן */
-
-    border-radius: 14px !important;
-    border: 1px solid #333 !important;
-    background-color: #1c1f26 !important;
-    color: white !important;
+    padding: 12px !important;
 }
 
 /* placeholder */
 .stTextInput input::placeholder {
-    color: #888 !important;
+    direction: rtl;
+    text-align: right;
+    color: #888;
     font-style: italic;
 }
 
+/* כפתור */
+.stButton button {
+    width: 100%;
+}
 </style>
 """, unsafe_allow_html=True)
 
 # כותרת
 st.title("חיפוש טיולים בישראל 🥾")
 
-# 🔍 שדה חיפוש
+# שדה חיפוש
 query = st.text_input(
     "",
     placeholder="לדוגמה: טיול קל בצפון עם מים 🌿"
@@ -54,27 +51,30 @@ query = st.text_input(
 
 search_clicked = st.button("חפש 🔍")
 
-# תוצאות
-if search_clicked and query:
+# 🛑 חשוב — לא נוגעים ב-results עד שהוא קיים
+if search_clicked:
 
-    results = run_agent(query)
+    if not query:
+        st.warning("תכתבי משהו לחיפוש 🙂")
+    else:
+        results = run_agent(query)
 
-    st.divider()
-    st.subheader("מסלולים מומלצים ✨")
+        st.divider()
+        st.subheader("מסלולים מומלצים ✨")
 
-    if not results:
-        st.warning("לא נמצאו תוצאות 😅")
+        if not results:
+            st.warning("לא נמצאו תוצאות 😅")
+        else:
+            for r in results:
+                st.markdown(f"### {r.get('title', 'מסלול ללא שם')} 🥾")
 
-for r in results:
-    st.markdown("### " + (r["title"] or "מסלול ללא שם") + " 🥾")
+                st.markdown(f"📍 אזור: {r.get('area', 'לא ידוע')}")
+                st.markdown(f"⏱️ משך: {r.get('duration', 'לא ידוע')}")
+                st.markdown(f"🥵 קושי: {r.get('difficulty', 'לא ידוע')}")
 
-    st.markdown(f"📍 אזור: {r['area'] or 'לא ידוע'}")
-    st.markdown(f"⏱️ משך: {r['duration'] or 'לא ידוע'}")
-    st.markdown(f"🥵 קושי: {r['difficulty'] or 'לא ידוע'}")
+                st.write(r.get("description", ""))
 
-    st.write(r["description"])
+                if r.get("link"):
+                    st.markdown(f"[🔗 מעבר למסלול]({r['link']})")
 
-    if r["link"]:
-        st.markdown(f"[🔗 מעבר למסלול]({r['link']})")
-
-    st.divider()
+                st.divider()
