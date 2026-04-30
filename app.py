@@ -1,48 +1,54 @@
 import streamlit as st
 from search import search_hikes
 
-# 🔥 RTL FIX אמיתי
+# חשוב: זה חייב להיות ראשון
 st.set_page_config(layout="centered")
 
+# 🔥 RTL FIX חזק (כולל override מלא)
 st.markdown("""
 <style>
-html, body, [class*="css"] {
+/* כל האפליקציה */
+html, body, [data-testid="stAppViewContainer"] {
+    direction: rtl;
+    text-align: right;
+}
+
+/* כל האלמנטים */
+* {
     direction: rtl !important;
     text-align: right !important;
 }
 
-section.main > div {
-    direction: rtl;
-}
-
-label {
-    text-align: right !important;
-    display: block;
-}
-
+/* input */
 input, textarea {
     text-align: right !important;
 }
 
-.stTextInput > div > div > input {
+/* label */
+label {
+    width: 100%;
     text-align: right !important;
 }
 
-.stSelectbox div[data-baseweb="select"] {
+/* selectbox */
+div[data-baseweb="select"] {
     direction: rtl !important;
 }
 
+/* כפתורים */
 button {
-    direction: rtl !important;
+    float: right;
+}
+
+/* בלוק מרכזי */
+.block-container {
+    direction: rtl;
+    text-align: right;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# 📦 עטיפה כללית (עוד חיזוק ל-RTL)
-st.markdown("<div dir='rtl'>", unsafe_allow_html=True)
-
-# 🧪 UI בדיקה
-st.title("🧪 בדיקת חיפוש מסלולים")
+st.title("🥾 חיפוש טיולים בישראל")
 
 query = st.text_input("מה לחפש?", "טיול קל בצפון ישראל")
 
@@ -53,8 +59,7 @@ if st.button("🔍 חפש"):
         st.error("לא נמצאו תוצאות 😅")
 
     for r in results:
+        st.markdown("---")
         st.subheader(r["title"])
         st.write(r["snippet"])
         st.markdown(f"[🔗 מעבר למסלול]({r['link']})")
-
-st.markdown("</div>", unsafe_allow_html=True)
