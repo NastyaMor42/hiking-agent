@@ -67,14 +67,18 @@ h1 {
 st.markdown("<h1>חיפוש טיולים בישראל 🥾</h1>", unsafe_allow_html=True)
 
 # 🔍 שדה חיפוש עם placeholder אמיתי
-query = st.text_input(
-    label="",
-    placeholder="לדוגמה: טיול קל בצפון עם מים 🌿",
-)
+col1, col2 = st.columns([5,1])
 
-# 🔘 כפתור
-if st.button("חפש מסלולים 🔍"):
+with col1:
+    query = st.text_input(
+        label="",
+        placeholder="לדוגמה: טיול קל בצפון עם מים 🌿",
+    )
 
+with col2:
+    search_clicked = st.button("חפש 🔍")
+
+if search_clicked:
     results = search_hikes(query)
 
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
