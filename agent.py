@@ -1,6 +1,6 @@
 from openai import OpenAI
 import streamlit as st
-from search import search_hikes
+from search import search_hikes, get_image
 import json
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
