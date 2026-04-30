@@ -7,26 +7,21 @@ st.set_page_config(layout="centered")
 st.markdown("""
 <style>
 
-/* RTL בסיסי */
-.block-container {
-    direction: rtl;
-    text-align: right;
-}
-
-/* קונטיינר של השדה */
+/* קונטיינר */
 .stTextInput {
     max-width: 700px;
     margin: auto;
 }
 
-/* השדה עצמו */
+/* השדה עצמו - מתוקן */
 .stTextInput input {
     direction: rtl !important;
     text-align: right !important;
 
-    height: 80px !important;
-    padding: 18px !important;
-    font-size: 28px !important;
+    height: 60px !important;              /* הורדנו קצת */
+    padding: 0 16px !important;           /* רק צדדים */
+    font-size: 18px !important;
+    line-height: 60px !important;         /* 👈 זה מה שמתקן */
 
     border-radius: 14px !important;
     border: 1px solid #333 !important;
@@ -38,25 +33,6 @@ st.markdown("""
 .stTextInput input::placeholder {
     color: #888 !important;
     font-style: italic;
-}
-
-/* פוקוס */
-.stTextInput input:focus {
-    border: 1px solid #4c8bf5 !important;
-    outline: none !important;
-}
-
-/* כפתור */
-.stButton {
-    max-width: 700px;
-    margin: 10px auto;
-}
-
-.stButton button {
-    width: 100%;
-    height: 50px;
-    font-size: 16px;
-    border-radius: 12px;
 }
 
 </style>
