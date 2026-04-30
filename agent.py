@@ -6,29 +6,43 @@ import json
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def run_agent(query):
+
     results = search_hikes(query)
 
     if not results:
         return []
 
     prompt = f"""
-יש לך תוצאות חיפוש של טיולים:
+יש לך תוצאות חיפוש של טיולים בישראל:
 
 {results}
 
-בחר 2 מסלולים הכי רלוונטיים.
+המטרה:
+להחזיר מידע מסודר וברור על מסלולים.
 
-לכל אחד תן:
-- שם
-- תיאור קצר ברור
-- למה כדאי
+בחר 3 מסלולים הכי רלוונטיים.
 
-ענה JSON בלבד:
+לכל מסלול החזר:
+- title (שם המסלול)
+- area (צפון / מרכז / דרום)
+- duration (משך זמן משוער)
+- difficulty (קל / בינוני / קשה)
+- description (תיאור קצר ונעים)
+- link (קישור אמיתי מתוך התוצאות)
+
+⚠️ חשוב:
+- אל תמציא מידע שלא קיים
+- אם לא בטוח – תשאיר ריק ""
+
+ענה רק JSON בפורמט הזה:
+
 [
   {{
     "title": "",
-    "summary": "",
-    "why": "",
+    "area": "",
+    "duration": "",
+    "difficulty": "",
+    "description": "",
     "link": ""
   }}
 ]
@@ -42,8 +56,22 @@ def run_agent(query):
 
         content = response.choices[0].message.content
 
+        # ניסיון לפרסר JSON
         return json.loads(content)
 
     except Exception as e:
-        print("ERROR:", e)
-        return []
+        print("Agent error:", e)
+
+        # fallback בסיסי
+        fallback = []
+        for r in results[:3]:
+            fallback.append({
+                "title": r.get("title", ""),
+                "area": "",
+                "duration": "",
+                "difficulty": "",
+                "description": r.get("snippet", ""),
+                "link": r.get("link", "")
+            })
+
+        return fallback
