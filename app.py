@@ -7,6 +7,11 @@ st.set_page_config(layout="centered")
 st.markdown("""
 <style>
 
+.block-container {
+    direction: rtl;
+    text-align: right;
+}
+
 /* קונטיינר */
 .stTextInput {
     max-width: 700px;
