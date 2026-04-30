@@ -65,9 +65,16 @@ if search_clicked and query:
     if not results:
         st.warning("לא נמצאו תוצאות 😅")
 
-    for r in results:
-        st.markdown(f"### {r['title']} 🥾")
-        st.write(r["summary"])
-        st.write(f"💡 {r['why']}")
-        st.markdown(f"[מעבר למסלול 🔗]({r['link']})")
-        st.divider()
+for r in results:
+    st.markdown("### " + (r["title"] or "מסלול ללא שם") + " 🥾")
+
+    st.markdown(f"📍 אזור: {r['area'] or 'לא ידוע'}")
+    st.markdown(f"⏱️ משך: {r['duration'] or 'לא ידוע'}")
+    st.markdown(f"🥵 קושי: {r['difficulty'] or 'לא ידוע'}")
+
+    st.write(r["description"])
+
+    if r["link"]:
+        st.markdown(f"[🔗 מעבר למסלול]({r['link']})")
+
+    st.divider()
