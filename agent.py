@@ -7,7 +7,7 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def run_agent(query):
 
-    results = search_hikes(query)
+    results = search_hikes(query + " מסלול טיול אתר מסלול נחל ישראל")
 
     if not results:
         return []
