@@ -6,24 +6,24 @@ import json
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def run_agent(query):
-
-    # 1. חיפוש אמיתי
     results = search_hikes(query)
 
-    # 2. שליחה ל-AI
+    if not results:
+        return []
+
     prompt = f"""
-יש לך תוצאות חיפוש של מסלולי טיול:
+יש לך תוצאות חיפוש של טיולים:
 
 {results}
 
 בחר 2 מסלולים הכי רלוונטיים.
 
-לכל מסלול תן:
+לכל אחד תן:
 - שם
-- תיאור קצר ברור ונעים
-- למה כדאי ללכת אליו
+- תיאור קצר ברור
+- למה כדאי
 
-ענה בפורמט JSON:
+ענה JSON בלבד:
 [
   {{
     "title": "",
@@ -34,9 +34,16 @@ def run_agent(query):
 ]
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[{"role": "user", "content": prompt}]
-    )
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4.1-mini",
+            messages=[{"role": "user", "content": prompt}]
+        )
 
-    return json.loads(response.choices[0].message.content)
+        content = response.choices[0].message.content
+
+        return json.loads(content)
+
+    except Exception as e:
+        print("ERROR:", e)
+        return []
