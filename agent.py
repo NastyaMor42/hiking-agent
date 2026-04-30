@@ -54,7 +54,12 @@ def run_agent(query):
 
         content = response.choices[0].message.content
 
-        return json.loads(content)
+        parsed = json.loads(content)
+
+        for r in parsed:
+            r["image"] = get_image(r["title"])
+
+        return parsed
 
     except Exception as e:
         print("Agent error:", e)
