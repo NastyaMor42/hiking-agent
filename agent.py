@@ -57,10 +57,15 @@ def run_agent(query):
         parsed = json.loads(content)
 
         for r in parsed:
-            r["image"] = get_image(r["title"])
+            title = r.get("title")
 
-        return parsed
+            if title:
+                r["image"] = get_image(title)
+            else:
+                r["image"] = None
 
     except Exception as e:
+        import traceback
         print("Agent error:", e)
-        return []
+        print(traceback.format_exc())
+        raise e
