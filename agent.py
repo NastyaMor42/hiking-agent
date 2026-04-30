@@ -61,13 +61,13 @@ def run_agent(query):
 
             try:
                 if title:
-                    image_query = title + " ישראל מסלול טבע"
+                    image_query = title + " ישראל"
                     r["image"] = get_image(image_query)
                 else:
                     r["image"] = None
-    except Exception as e:
-        print("Image error:", e)
-        r["image"] = None
+            except Exception as e:
+                print("Image error:", e)
+                r["image"] = None
 
     except Exception as e:
         import traceback
