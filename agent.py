@@ -59,10 +59,15 @@ def run_agent(query):
         for r in parsed:
             title = r.get("title")
 
-            if title:
-                r["image"] = get_image(title)
-            else:
-                r["image"] = None
+            try:
+                if title:
+                    image_query = title + " ישראל מסלול טבע"
+                    r["image"] = get_image(image_query)
+                else:
+                    r["image"] = None
+    except Exception as e:
+        print("Image error:", e)
+        r["image"] = None
 
     except Exception as e:
         import traceback
